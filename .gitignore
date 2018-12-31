@@ -1,0 +1,5 @@
+scratch
+dist
+.eggs
+__pycache__
+.pyc

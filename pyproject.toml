@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "cnab"
+version = "0.1.0"
+description = "A module for working with Cloud Native Application Bundles in Python"
+authors = ["Gareth Rushgrove <gareth@morethanseven.net>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+pytest = "^3.4"
+pytest-black = "^0.3.2"
