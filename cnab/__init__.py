@@ -140,7 +140,7 @@ class Image:
     image_type: Optional[str] = None
     media_type: Optional[str] = None
     platform: Optional[ImagePlatform] = None
-    refs: Optional[List[Ref]] = field(default_factory=list)
+    refs: List[Ref] = field(default_factory=list)
     size: Optional[int] = None
 
     @staticmethod
@@ -322,8 +322,9 @@ class Parameter:
         required = from_union([from_bool, from_none], obj.get("required"))
         type = from_str(obj.get("type"))
         return Parameter(
-            allowed_values,
+            type,
             default_value,
+            allowed_values,
             destination,
             max_length,
             max_value,
@@ -331,7 +332,6 @@ class Parameter:
             min_length,
             min_value,
             required,
-            type,
         )
 
     def to_dict(self) -> dict:
@@ -358,13 +358,13 @@ class Bundle:
     version: str
     invocation_images: List[InvocationImage]
     schema_version: Optional[str] = "v1"
-    actions: Optional[Dict[str, Action]] = field(default_factory=dict)
-    credentials: Optional[Dict[str, Credential]] = field(default_factory=dict)
+    actions: Dict[str, Action] = field(default_factory=dict)
+    credentials: Dict[str, Credential] = field(default_factory=dict)
     description: Optional[str] = None
-    images: Optional[List[Image]] = field(default_factory=list)
-    keywords: Optional[List[str]] = field(default_factory=list)
-    maintainers: Optional[List[Maintainer]] = field(default_factory=list)
-    parameters: Optional[Dict[str, Parameter]] = field(default_factory=dict)
+    images: List[Image] = field(default_factory=list)
+    keywords: List[str] = field(default_factory=list)
+    maintainers: List[Maintainer] = field(default_factory=list)
+    parameters: Dict[str, Parameter] = field(default_factory=dict)
 
     @staticmethod
     def from_dict(obj: Any) -> "Bundle":
