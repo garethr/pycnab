@@ -10,6 +10,16 @@ There are probably three main areas of interest for a CNAB client:
 
 At this early stage only the first of these is currently work-in-progress.
 
+
+## Installation
+
+The module is published on [PyPi](https://pypi.org/project/cnab/) and can be installed from there.
+
+```bash
+pip install cnab
+```
+
+
 ## Parsing `bundle.json`
 
 Nothing too fancy here, the `Bundle` class  has a `from_dict` static method which
