@@ -15,7 +15,7 @@ def test_create_bundle():
 
 
 def test_read_bundle():
-    with open("bundle.json") as f:
+    with open("fixtures/helloworld/bundle.json") as f:
         data = json.load(f)
 
     assert Bundle.from_dict(data)

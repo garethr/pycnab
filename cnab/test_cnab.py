@@ -5,7 +5,7 @@ from cnab import CNAB, Bundle
 
 @pytest.fixture
 def app():
-    return CNAB("bundle.json")
+    return CNAB("fixtures/helloworld/bundle.json")
 
 
 @pytest.mark.parametrize("action", ["install", "upgrade", "uninstall"])
