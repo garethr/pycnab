@@ -51,7 +51,7 @@ class CNAB:
         required = []
         for param in self.bundle.parameters:
             parameter = self.bundle.parameters[param]
-            if not parameter.default_value:
+            if parameter.required:
                 required.append(param)
 
         for param in required:
