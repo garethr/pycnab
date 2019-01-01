@@ -23,7 +23,7 @@ class CNAB:
         self.name = name or self.bundle.name
 
     def run(self, action, **parameters):
-        import docker
+        import docker  # type: ignore
 
         client = docker.from_env()
         docker_images = list(
