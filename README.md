@@ -8,7 +8,7 @@ There are probably three main areas of interest for a CNAB client:
 2. Building invocation images
 3. Running actions against a CNAB
 
-At this early stage only the first of these is currently work-in-progress.
+At this early stage only the first and third of these are currently work-in-progress.
 
 
 ## Installation
@@ -62,6 +62,32 @@ bundle = Bundle(
 
 print(json.dumps(bundle.to_dict(), indent=4))
 ```
+
+## Running CNABs
+
+The module supports running actions on a CNAB, using the `docker` driver.
+
+```python
+from cnab import CNAB
+
+# The first argument can be a path to a bundle.json file, a dictionary
+# or a full `Bundle` object
+app = CNAB("bundle.json")
+
+# list available actions
+print(app.actions())
+
+# list available parameters
+print(app.parameters())
+
+# run the install action
+print(app.run("install"))
+
+# run the install action specifying a parameters
+print(app.run("install", port=9090))
+```
+
+Error handling for this is very work-in-progress, and this doesn't yet handle credentials at all.
 
 
 ## Thanks
