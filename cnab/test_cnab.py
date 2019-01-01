@@ -1,21 +1,25 @@
-import json
+import pytest  # type: ignore
 
-from cnab import Bundle, InvocationImage
-
-
-def test_create_bundle():
-    bundle = Bundle(
-        name="sample",
-        version="0.1.0",
-        invocation_images=[
-            InvocationImage(image_type="docker", image="garethr/helloworld:0.1.0")
-        ],
-    )
-    assert bundle.to_dict()
+from cnab import CNAB, Bundle
 
 
-def test_read_bundle():
-    with open("bundle.json") as f:
-        data = json.load(f)
+@pytest.fixture
+def app():
+    return CNAB("bundle.json")
 
-    assert Bundle.from_dict(data)
+
+@pytest.mark.parametrize("action", ["install", "upgrade", "uninstall"])
+def test_actions_present(app, action):
+    assert action in app.actions()
+
+
+def test_port_parameter_present(app):
+    assert "port" in app.parameters()
+
+
+def test_app_name(app):
+    assert app.name == "helloworld"
+
+
+def test_app_bundle(app):
+    assert isinstance(app.bundle, Bundle)

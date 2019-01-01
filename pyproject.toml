@@ -10,6 +10,10 @@ keywords = ["cnab"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
+docker = { version = "^3.6", optional = true }
+
+[tool.poetry.extras]
+docker = ["docker"]
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.4"
