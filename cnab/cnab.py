@@ -1,5 +1,7 @@
-from typing import Union
 import json
+import os
+import tempfile
+from typing import Union
 
 from cnab.config import Bundle, Action
 
@@ -22,7 +24,7 @@ class CNAB:
 
         self.name = name or self.bundle.name
 
-    def run(self, action, **parameters):
+    def run(self, action, credentials: dict = {}, parameters: dict = {}):
         import docker  # type: ignore
 
         client = docker.from_env()
@@ -30,12 +32,6 @@ class CNAB:
             filter(lambda x: x.image_type == "docker", self.bundle.invocation_images)
         )
         assert len(docker_images) == 1
-
-        env = {
-            "CNAB_INSTALLATION_NAME": self.name,
-            "CNAB_BUNDLE_NAME": self.bundle.name,
-            "CNAB_ACTION": action,
-        }
 
         # check if action is supported
         assert action in self.actions()
@@ -73,17 +69,61 @@ class CNAB:
                 if parameter.min_length:
                     assert len(param) >= parameter.min_length
 
+        env = {
+            "CNAB_INSTALLATION_NAME": self.name,
+            "CNAB_BUNDLE_NAME": self.bundle.name,
+            "CNAB_ACTION": action,
+        }
+
         # build environment hash
         for param in self.bundle.parameters:
             parameter = self.bundle.parameters[param]
-            key = parameter.destination or f"CNAB_P_{param.upper()}"
-            value = (
-                parameters[param] if param in parameters else parameter.default_value
-            )
-            env[key] = value
+            if parameter.destination:
+                if parameter.destination.env:
+                    # discussing behavour in https://github.com/deislabs/cnab-spec/issues/69
+                    assert parameter.destination.env[:5] != "CNAB_"
+                    key = parameter.destination.env or f"CNAB_P_{param.upper()}"
+                    value = (
+                        parameters[param]
+                        if param in parameters
+                        else parameter.default_value
+                    )
+                    env[key] = value
+                if parameter.destination.path:
+                    # not yet supported
+                    pass
+
+        mounts = []
+        if self.bundle.credentials:
+            for name in self.bundle.credentials:
+                # check credential has been provided
+                assert name in credentials
+
+                credential = self.bundle.credentials[name]
+                if credential.env:
+                    # discussing behavour in https://github.com/deislabs/cnab-spec/issues/69
+                    assert credential.env[:5] != "CNAB_"
+                    env[credential.env] = credentials[name]
+
+                if credential.path:
+                    tmp = tempfile.NamedTemporaryFile(mode="w+", delete=True)
+                    tmp.write(credentials[name])
+                    tmp.flush()
+                    mounts.append(
+                        docker.types.Mount(
+                            target=credential.path,
+                            source=tmp.name,
+                            read_only=True,
+                            type="bind",
+                        )
+                    )
 
         return client.containers.run(
-            docker_images[0].image, auto_remove=False, remove=True, environment=env
+            docker_images[0].image,
+            auto_remove=False,
+            remove=True,
+            environment=env,
+            mounts=mounts,
         )
 
     def actions(self) -> dict:
@@ -98,3 +138,6 @@ class CNAB:
 
     def parameters(self) -> dict:
         return self.bundle.parameters
+
+    def credentials(self) -> dict:
+        return self.bundle.credentials

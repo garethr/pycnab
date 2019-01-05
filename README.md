@@ -4,11 +4,11 @@ _Work-in-progress_ library for working with [CNAB](https://cnab.io/) in Python.
 
 There are probably three main areas of interest for a CNAB client:
 
-1. Creation/parsing of the `bundle.json` format
-2. Building invocation images
-3. Running actions against a CNAB
+1. Handling the `bundle.json` format ([101](https://github.com/deislabs/cnab-spec/blob/master/101-bundle-json.md))
+2. Building invocation images ([102](https://github.com/deislabs/cnab-spec/blob/master/102-invocation-image.md))
+3. Running actions against a CNAB ([103](https://github.com/deislabs/cnab-spec/blob/master/103-bundle-runtime.md))
 
-At this early stage only the first and third of these are currently work-in-progress.
+Claims and Signing are optional but will be worked on once the above are stable.
 
 
 ## Installation
@@ -72,7 +72,7 @@ from cnab import CNAB
 
 # The first argument can be a path to a bundle.json file, a dictionary
 # or a full `Bundle` object
-app = CNAB("bundle.json")
+app = CNAB("fictures/helloworld/bundle.json")
 
 # list available actions
 print(app.actions())
@@ -84,10 +84,21 @@ print(app.parameters())
 print(app.run("install"))
 
 # run the install action specifying a parameters
-print(app.run("install", port=9090))
+print(app.run("install", parameters={"port": 9090}))
+
+# Many applications will require credentials
+app = CNAB("fixtures/hellohelm/bundle.json")
+
+# list required credentials
+print(app.credentials())
+
+# Here we pass the value for the required credential
+# in this case by reading the existing configuration from disk
+with open("/home/garethr/.kube/config") as f:
+    print(app.run("status", credentials={"kubeconfig": f.read()}))
 ```
 
-Error handling for this is very work-in-progress, and this doesn't yet handle credentials at all.
+Note that error handling for this is very work-in-progress.
 
 
 ## Thanks
