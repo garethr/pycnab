@@ -1,4 +1,4 @@
-from cnab.config import (
+from cnab.types import (
     Action,
     Credential,
     ImagePlatform,

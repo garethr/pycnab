@@ -3,7 +3,7 @@ import os
 import tempfile
 from typing import Union
 
-from cnab.config import Bundle, Action
+from cnab.types import Bundle, Action
 
 
 class CNAB:
