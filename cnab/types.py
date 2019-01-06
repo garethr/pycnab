@@ -412,11 +412,3 @@ class Bundle:
         result["schemaVersion"] = from_str(self.schema_version)
         result["version"] = from_str(self.version)
         return clean(result)
-
-
-def bundle_from_dict(s: Any) -> Bundle:
-    return Bundle.from_dict(s)
-
-
-def bundle_to_dict(x: Bundle) -> Any:
-    return to_class(Bundle, x)
