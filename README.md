@@ -75,10 +75,10 @@ from cnab import CNAB
 app = CNAB("fictures/helloworld/bundle.json")
 
 # list available actions
-print(app.actions())
+print(app.actions)
 
 # list available parameters
-print(app.parameters())
+print(app.parameter)
 
 # run the install action
 print(app.run("install"))
@@ -90,7 +90,7 @@ print(app.run("install", parameters={"port": 9090}))
 app = CNAB("fixtures/hellohelm/bundle.json")
 
 # list required credentials
-print(app.credentials())
+print(app.credentials
 
 # Here we pass the value for the required credential
 # in this case by reading the existing configuration from disk

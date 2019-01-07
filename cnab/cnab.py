@@ -1,5 +1,4 @@
 import json
-import os
 import tempfile
 from typing import Union
 
@@ -24,7 +23,7 @@ class CNAB:
 
         self.name = name or self.bundle.name
 
-    def run(self, action, credentials: dict = {}, parameters: dict = {}):
+    def run(self, action: str, credentials: dict = {}, parameters: dict = {}):
         import docker  # type: ignore
 
         client = docker.from_env()
@@ -34,7 +33,7 @@ class CNAB:
         assert len(docker_images) == 1
 
         # check if action is supported
-        assert action in self.actions()
+        assert action in self.actions
 
         # check if parameters passed in are in bundle parameters
         errors = []
@@ -126,6 +125,7 @@ class CNAB:
             mounts=mounts,
         )
 
+    @property
     def actions(self) -> dict:
         actions = {
             "install": Action(modifies=True),
@@ -136,8 +136,10 @@ class CNAB:
             actions.update(self.bundle.actions)
         return actions
 
+    @property
     def parameters(self) -> dict:
         return self.bundle.parameters
 
+    @property
     def credentials(self) -> dict:
         return self.bundle.credentials

@@ -1,6 +1,15 @@
 import json
 
-from cnab import Bundle, InvocationImage, Action, Credential, Parameter, Maintainer
+from cnab import (
+    Bundle,
+    Credential,
+    InvocationImage,
+    Action,
+    Parameter,
+    Metadata,
+    Maintainer,
+    Destination,
+)
 import pytest  # type: ignore
 
 
@@ -63,8 +72,15 @@ class TestAllParameters(object):
                 "status": Action(modifies=False),
                 "explode": Action(modifies=True),
             },
-            parameters={},
-            credentials={},
+            parameters={
+                "port": Parameter(
+                    type="int",
+                    default_value=8080,
+                    destination=Destination(env="PORT"),
+                    metadata=Metadata(description="the public port"),
+                )
+            },
+            credentials={"kubeconfig": Credential(path="/root/.kube/config")},
             description="test",
             keywords=["test1", "test2"],
             maintainers=[
@@ -90,6 +106,18 @@ class TestAllParameters(object):
 
     def test_bundle_set_maintainer(self, bundle):
         assert len(bundle.maintainers) == 1
+
+    def test_bundle_set_credentials(self, bundle):
+        assert len(bundle.credentials) == 1
+
+    def test_bundle_kubeconfig_credential(self, bundle):
+        assert "kubeconfig" in bundle.credentials
+
+    def test_bundle_set_parameters(self, bundle):
+        assert len(bundle.parameters) == 1
+
+    def test_bundle_port_parameter(self, bundle):
+        assert "port" in bundle.parameters
 
     def test_convert_bundle_to_dict(self, bundle):
         assert isinstance(bundle.to_dict(), dict)

@@ -10,17 +10,17 @@ class TestHelloWorld(object):
 
     @pytest.mark.parametrize("action", ["install", "upgrade", "uninstall"])
     def test_actions_present(self, app, action):
-        assert action in app.actions()
+        assert action in app.actions
 
     def test_credentials_empty(self, app):
-        assert app.credentials() == None
+        assert app.credentials == None
 
     def test_port_parameter_present(self, app):
-        assert "port" in app.parameters()
+        assert "port" in app.parameters
 
     def test_port_details(self, app):
-        assert app.parameters()["port"].type == "int"
-        assert app.parameters()["port"].default_value == 8080
+        assert app.parameters["port"].type == "int"
+        assert app.parameters["port"].default_value == 8080
 
     def test_app_name(self, app):
         assert app.name == "helloworld"
@@ -42,7 +42,7 @@ class TestHelloHelm(object):
 
     @pytest.mark.parametrize("action", ["install", "upgrade", "uninstall", "status"])
     def test_actions_present(self, app, action):
-        assert action in app.actions()
+        assert action in app.actions
 
 
 def test_app_from_dict():
@@ -53,7 +53,17 @@ def test_app_from_dict():
             {"imageType": "docker", "image": "cnab/helloworld:latest"}
         ],
         "images": [],
-        "parameters": {"port": {"defaultValue": 8080, "type": "int"}},
+        "parameters": {
+            "port": {
+                "defaultValue": 8080,
+                "type": "int",
+                "destination": {"env": "PORT"},
+                "metadata": {"descriptiob": "the public port"},
+            }
+        },
+        "maintainers": [
+            {"email": "test@example.com", "name": "test", "url": "example.com"}
+        ],
     }
     assert CNAB(bundle)
 
