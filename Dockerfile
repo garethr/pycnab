@@ -7,7 +7,7 @@ FROM poetry AS base
 RUN mkdir /app
 WORKDIR /app
 COPY pyproject.* .
-RUN poetry install -n
+RUN poetry install -n --extras=docker
 COPY . /app
 
 
