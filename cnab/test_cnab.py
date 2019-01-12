@@ -3,11 +3,13 @@ import pytest  # type: ignore
 from cnab import CNAB, Bundle, InvocationImage
 
 
-class TestHelloWorld(object):
+class HelloWorld(object):
     @pytest.fixture
     def app(self):
         return CNAB("fixtures/helloworld/bundle.json")
 
+
+class TestHelloWorld(HelloWorld):
     @pytest.mark.parametrize("action", ["install", "upgrade", "uninstall"])
     def test_actions_present(self, app, action):
         assert action in app.actions
@@ -33,6 +35,16 @@ class TestHelloWorld(object):
 
     def test_invocation_images(self, app):
         assert len(app.bundle.invocation_images) == 1
+
+
+@pytest.mark.docker
+class TestIntegrationHelloWorld(HelloWorld):
+    @pytest.fixture
+    def install(self, app):
+        return str(app.run("install", parameters={"port": 9090}))
+
+    def test_run(self, install):
+        assert "install" in install
 
 
 class TestHelloHelm(object):
