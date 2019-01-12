@@ -3,6 +3,7 @@ import tempfile
 from typing import Union
 
 from cnab.types import Bundle, Action
+from cnab.util import extract_docker_images
 
 
 class CNAB:
@@ -26,14 +27,12 @@ class CNAB:
     def run(self, action: str, credentials: dict = {}, parameters: dict = {}):
         import docker  # type: ignore
 
-        client = docker.from_env()
-        docker_images = list(
-            filter(lambda x: x.image_type == "docker", self.bundle.invocation_images)
-        )
-        assert len(docker_images) == 1
-
         # check if action is supported
         assert action in self.actions
+
+        client = docker.from_env()
+        docker_images = extract_docker_images(self.bundle.invocation_images)
+        assert len(docker_images) == 1
 
         # check if parameters passed in are in bundle parameters
         errors = []

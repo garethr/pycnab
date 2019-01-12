@@ -179,7 +179,7 @@ class Image:
 class InvocationImage:
     image: str
     digest: Optional[str] = None
-    image_type: Optional[str] = None
+    image_type: Optional[str] = "oci"
     media_type: Optional[str] = None
     platform: Optional[ImagePlatform] = None
     size: Optional[str] = None
