@@ -12,4 +12,4 @@ COPY . /app
 
 
 FROM base AS Test
-RUN poetry run pytest
+RUN poetry run pytest -m "not docker"
