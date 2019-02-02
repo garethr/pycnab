@@ -210,22 +210,22 @@ class InvocationImage:
 
 @dataclass
 class Maintainer:
+    name: str
     email: Optional[str] = None
-    name: Optional[str] = None
     url: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "Maintainer":
         assert isinstance(obj, dict)
-        email = from_union([from_str, from_none], obj.get("email"))
         name = from_union([from_str, from_none], obj.get("name"))
+        email = from_union([from_str, from_none], obj.get("email"))
         url = from_union([from_str, from_none], obj.get("url"))
-        return Maintainer(email, name, url)
+        return Maintainer(name, email, url)
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["email"] = from_union([from_str, from_none], self.email)
         result["name"] = from_union([from_str, from_none], self.name)
+        result["email"] = from_union([from_str, from_none], self.email)
         result["url"] = from_union([from_str, from_none], self.url)
         return clean(result)
 
@@ -340,6 +340,7 @@ class Bundle:
     actions: Dict[str, Action] = field(default_factory=dict)
     credentials: Dict[str, Credential] = field(default_factory=dict)
     description: Optional[str] = None
+    license: Optional[str] = None
     images: List[Image] = field(default_factory=list)
     keywords: List[str] = field(default_factory=list)
     maintainers: List[Maintainer] = field(default_factory=list)
@@ -356,6 +357,7 @@ class Bundle:
             obj.get("credentials"),
         )
         description = from_union([from_str, from_none], obj.get("description"))
+        license = from_union([from_str, from_none], obj.get("license"))
         images = from_union(
             [lambda x: from_list(Image.from_dict, x), from_none], obj.get("images")
         )
@@ -384,6 +386,7 @@ class Bundle:
             actions,
             credentials,
             description,
+            license,
             images,
             keywords,
             maintainers,
@@ -397,6 +400,7 @@ class Bundle:
             lambda x: to_class(Credential, x), self.credentials
         )
         result["description"] = from_union([from_str, from_none], self.description)
+        result["license"] = from_union([from_str, from_none], self.license)
         result["images"] = from_list(lambda x: to_class(Image, x), self.images)
         result["invocationImages"] = from_list(
             lambda x: to_class(InvocationImage, x), self.invocation_images
