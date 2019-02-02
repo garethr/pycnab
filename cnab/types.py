@@ -1,3 +1,5 @@
+import canonicaljson  # type: ignore
+
 from dataclasses import dataclass, field
 from typing import Optional, Any, List, Union, Dict, TypeVar, Callable, Type, cast
 
@@ -416,3 +418,10 @@ class Bundle:
         result["schemaVersion"] = from_str(self.schema_version)
         result["version"] = from_str(self.version)
         return clean(result)
+
+    def to_json(self, pretty: bool = False) -> str:
+        if pretty:
+            func = canonicaljson.encode_pretty_printed_json
+        else:
+            func = canonicaljson.encode_canonical_json
+        return func(self.to_dict()).decode()

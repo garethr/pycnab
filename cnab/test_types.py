@@ -51,6 +51,12 @@ class TestMinimalParameters(object):
     def test_bundle_description_blank(self, bundle):
         assert not bundle.description
 
+    def test_convert_bundle_to_json(self, bundle):
+        assert isinstance(bundle.to_json(), str)
+
+    def test_convert_bundle_to_pretty_json(self, bundle):
+        assert isinstance(bundle.to_json(pretty=True), str)
+
 
 def test_read_bundle():
     with open("fixtures/helloworld/bundle.json") as f:

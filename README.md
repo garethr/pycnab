@@ -45,7 +45,6 @@ structure based on the current specification and would allow for building a cust
 user interface for generating `bundle.json` files.
 
 ```python
-import json
 from cnab import Bundle, InvocationImage
 
 bundle = Bundle(
@@ -60,7 +59,7 @@ bundle = Bundle(
     ],
 )
 
-print(json.dumps(bundle.to_dict(), indent=4))
+print(bundle.to_json())
 ```
 
 ## Running CNABs
