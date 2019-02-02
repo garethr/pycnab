@@ -343,7 +343,7 @@ class Bundle:
     credentials: Dict[str, Credential] = field(default_factory=dict)
     description: Optional[str] = None
     license: Optional[str] = None
-    images: List[Image] = field(default_factory=list)
+    images: Dict[str, Image] = field(default_factory=dict)
     keywords: List[str] = field(default_factory=list)
     maintainers: List[Maintainer] = field(default_factory=list)
     parameters: Dict[str, Parameter] = field(default_factory=dict)
@@ -361,7 +361,7 @@ class Bundle:
         description = from_union([from_str, from_none], obj.get("description"))
         license = from_union([from_str, from_none], obj.get("license"))
         images = from_union(
-            [lambda x: from_list(Image.from_dict, x), from_none], obj.get("images")
+            [lambda x: from_dict(Image.from_dict, x), from_none], obj.get("images")
         )
         invocation_images = from_list(
             InvocationImage.from_dict, obj.get("invocationImages")
@@ -403,7 +403,7 @@ class Bundle:
         )
         result["description"] = from_union([from_str, from_none], self.description)
         result["license"] = from_union([from_str, from_none], self.license)
-        result["images"] = from_list(lambda x: to_class(Image, x), self.images)
+        result["images"] = from_dict(lambda x: to_class(Image, x), self.images)
         result["invocationImages"] = from_list(
             lambda x: to_class(InvocationImage, x), self.invocation_images
         )

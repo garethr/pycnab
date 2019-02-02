@@ -25,7 +25,7 @@ class TestMinimalParameters(object):
         )
 
     def test_bundle_images_empty(self, bundle):
-        assert bundle.images == []
+        assert bundle.images == {}
 
     def test_bundle_parameters_empty(self, bundle):
         assert bundle.parameters == {}
@@ -92,7 +92,7 @@ class TestAllParameters(object):
             maintainers=[
                 Maintainer(email="test@example.com", name="test", url="example.com")
             ],
-            images=[],
+            images={},
             schema_version="v2",
         )
 

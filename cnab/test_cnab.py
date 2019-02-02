@@ -64,7 +64,7 @@ def test_app_from_dict():
         "invocationImages": [
             {"imageType": "docker", "image": "cnab/helloworld:latest"}
         ],
-        "images": [],
+        "images": {},
         "parameters": {
             "port": {
                 "defaultValue": 8080,
