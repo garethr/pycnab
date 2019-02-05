@@ -131,6 +131,7 @@ class CNAB:
 
         return client.containers.run(
             docker_images[0].image,
+            "/cnab/app/run",
             auto_remove=False,
             remove=True,
             environment=env,
