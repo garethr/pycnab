@@ -12,3 +12,4 @@ from cnab.types import (
     Bundle,
 )
 from cnab.cnab import CNAB
+from cnab.invocation_image import CNABDirectory

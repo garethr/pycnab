@@ -100,6 +100,27 @@ with open("/home/garethr/.kube/config") as f:
 Note that error handling for this is very work-in-progress.
 
 
+## Working with invocation images
+
+`pycnab` also has a class for working with invocation images.
+
+```python
+from cnab import CNABDirectory
+
+directory = CNABDirectory("fixtures/invocationimage")
+
+# Check whether the directory is valid
+# Raises `InvalidCNABDirectory` exception if invalid
+directory.valid()
+
+# Returns the text of the associated README file if present
+directory.readme()
+
+# Returns the text of the associated LICENSE file if present
+directory.license()
+```
+
+
 ## Thanks
 
 Thanks to [QuickType](https://quicktype.io/) for bootstrapping the creation of the Python code for manipulating `bundle.json` based on the current JSON Schema.
