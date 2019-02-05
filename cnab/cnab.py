@@ -116,6 +116,19 @@ class CNAB:
                         )
                     )
 
+        # Mount image maps for runtime usage
+        tmp = tempfile.NamedTemporaryFile(mode="w+", delete=True)
+        tmp.write(json.dumps(self.bundle.images))
+        tmp.flush()
+        mounts.append(
+            docker.types.Mount(
+                target="/cnab/app/image-map.json",
+                source=tmp.name,
+                read_only=True,
+                type="bind",
+            )
+        )
+
         return client.containers.run(
             docker_images[0].image,
             auto_remove=False,
