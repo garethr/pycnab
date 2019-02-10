@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cnab"
-version = "0.1.5"
+version = "0.1.6"
 description = "A module for working with Cloud Native Application Bundles in Python"
 authors = ["Gareth Rushgrove <gareth@morethanseven.net>"]
 license = "Apache-2.0"
