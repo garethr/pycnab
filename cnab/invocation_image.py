@@ -1,5 +1,5 @@
 import os
-from typing import Union
+from typing import Union, List
 
 
 class InvalidCNABDirectoryError(Exception):
@@ -22,6 +22,8 @@ class CNABDirectory(object):
 
     def has_no_misc_files_in_cnab_dir(self) -> bool:
         cnab = os.path.join(self.path, "cnab")
+        disallowed_dirs: List[str] = []
+        disallowed_files: List[str] = []
         for root, dirs, files in os.walk(cnab):
             disallowed_dirs = [x for x in dirs if x not in ["app", "build"]]
             disallowed_files = [
