@@ -16,19 +16,20 @@ import os
 import shutil
 from urllib.request import urlopen
 
-from jsonschema import validate
+from jsonschema import validate  # type: ignore
 import pytest
 
 from cnab import Bundle, CNABDirectory
 
 # If we don't already have a schemas directory from a previous run or extra schemas then create one
-if not os.path.exists('schemas'):
-    os.makedirs('schemas')
+if not os.path.exists("schemas"):
+    os.makedirs("schemas")
 
 # We grab the latest version of the schema from the spec repository whenever the tests are run
 URL = "https://raw.githubusercontent.com/deislabs/cnab-spec/master/schema/bundle.schema.json"
-with urlopen(URL) as response, open("schemas/latest.json", 'wb') as out_file:
+with urlopen(URL) as response, open("schemas/latest.json", "wb") as out_file:
     shutil.copyfileobj(response, out_file)
+
 
 @pytest.fixture(scope="module", params=glob.glob("schemas/*.json"))
 def schema(request):
