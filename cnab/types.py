@@ -8,12 +8,14 @@ T = TypeVar("T")
 
 
 def from_bool(x: Any) -> bool:
-    assert isinstance(x, bool)
+    if not isinstance(x, bool):
+        raise Exception(f"{x} not a boolean")
     return x
 
 
 def from_none(x: Any) -> Any:
-    assert x is None
+    if not x is None:
+        raise Exception(f"{x} not None")
     return x
 
 
@@ -27,27 +29,32 @@ def from_union(fs, x):
 
 
 def from_str(x: Any) -> str:
-    assert isinstance(x, str)
+    if not isinstance(x, str):
+        raise Exception(f"{x} not a string")
     return x
 
 
 def from_list(f: Callable[[Any], T], x: Any) -> List[T]:
-    assert isinstance(x, list)
+    if not isinstance(x, list):
+        raise Exception(f"{x} not a list")
     return [f(y) for y in x]
 
 
 def from_int(x: Any) -> int:
-    assert isinstance(x, int) and not isinstance(x, bool)
+    if not (isinstance(x, int) and not isinstance(x, bool)):
+        raise Exception(f"{x} not an integer")
     return x
 
 
 def to_class(c: Type[T], x: Any) -> dict:
-    assert isinstance(x, c)
+    if not isinstance(x, c):
+        raise Exception(f"{x} not a {c}")
     return cast(Any, x).to_dict()
 
 
 def from_dict(f: Callable[[Any], T], x: Any) -> Dict[str, T]:
-    assert isinstance(x, dict)
+    if not isinstance(x, dict):
+        raise Exception(f"{x} not a dictionary")
     return {k: f(v) for (k, v) in x.items()}
 
 
