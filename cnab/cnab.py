@@ -78,9 +78,7 @@ class CNAB:
             parameter = self.bundle.parameters[param]
             if parameter.destination:
                 if parameter.destination.env:
-                    # discussing behavour in https://github.com/deislabs/cnab-spec/issues/69
-                    assert parameter.destination.env[:5] != "CNAB_"
-                    key = parameter.destination.env or f"CNAB_P_{param.upper()}"
+                    key = parameter.destination.env
                     value = (
                         parameters[param]
                         if param in parameters

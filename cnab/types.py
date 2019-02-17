@@ -65,16 +65,22 @@ def clean(result: Dict) -> dict:
 @dataclass
 class Action:
     modifies: Optional[bool] = None
+    stateless: Optional[bool] = None
+    description: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "Action":
         assert isinstance(obj, dict)
         modifies = from_union([from_bool, from_none], obj.get("modifies"))
-        return Action(modifies)
+        stateless = from_union([from_bool, from_none], obj.get("stateless"))
+        description = from_union([from_str, from_none], obj.get("description"))
+        return Action(modifies, stateless, description)
 
     def to_dict(self) -> dict:
         result: dict = {}
         result["modifies"] = from_union([from_bool, from_none], self.modifies)
+        result["stateless"] = from_union([from_bool, from_none], self.stateless)
+        result["description"] = from_union([from_str, from_none], self.description)
         return clean(result)
 
 
@@ -280,9 +286,9 @@ class Metadata:
 @dataclass
 class Parameter:
     type: str
+    destination: Destination
     default_value: Union[bool, int, None, str] = None
     allowed_values: Optional[List[Any]] = field(default_factory=list)
-    destination: Optional[Destination] = None
     max_length: Optional[int] = None
     max_value: Optional[int] = None
     metadata: Optional[Metadata] = None
@@ -299,9 +305,7 @@ class Parameter:
         default_value = from_union(
             [from_int, from_bool, from_none, from_str], obj.get("defaultValue")
         )
-        destination = from_union(
-            [Destination.from_dict, from_none], obj.get("destination")
-        )
+        destination = from_union([Destination.from_dict], obj.get("destination"))
         max_length = from_union([from_int, from_none], obj.get("maxLength"))
         max_value = from_union([from_int, from_none], obj.get("maxValue"))
         metadata = from_union([Metadata.from_dict, from_none], obj.get("metadata"))
@@ -311,9 +315,9 @@ class Parameter:
         type = from_str(obj.get("type"))
         return Parameter(
             type,
+            destination,
             default_value,
             allowed_values,
-            destination,
             max_length,
             max_value,
             metadata,
@@ -326,7 +330,7 @@ class Parameter:
         result: dict = {}
         result["allowedValues"] = from_list(lambda x: x, self.allowed_values)
         result["destination"] = from_union(
-            [lambda x: to_class(Destination, x), from_none], self.destination
+            [lambda x: to_class(Destination, x)], self.destination
         )
         result["maxLength"] = from_union([from_int, from_none], self.max_length)
         result["maxValue"] = from_union([from_int, from_none], self.max_value)
